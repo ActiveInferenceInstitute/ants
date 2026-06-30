@@ -1,0 +1,47 @@
+# AII sidecar — InstituteOS metadata. Schema: instituteos.platform.aii_sidecar
+meta:
+  updated: '2026-06-30'
+repo:
+  name: ants
+  slug: ants
+  full_name: ActiveInferenceInstitute/ants
+  description: Code for [Active inferants The basis for an active inference framework
+    for ant colony behavior](https://www.researchgate.net/publication/348003553_Active_inferants_The_basis_for_an_active_inference_framework_for_ant_colony_behavior)
+    by…
+institute:
+  category: research-software
+  steward: Active Inference Institute
+ecosystem:
+  relations:
+  - repo: ActiveInferenceInstitute/InstituteOS
+    relation: referenced-by
+    note: Federated via the InstituteOS .aii manifest.
+  - repo: ActiveInferenceInstitute/Active_Inference_Ontology
+    note: Uses Active Inference Ontology terms.
+  links:
+    github: https://github.com/ActiveInferenceInstitute/ants
+    website: https://www.activeinference.org
+artifacts:
+- path: README.md
+  kind: doc
+  description: Repository overview.
+- path: LICENSE
+  kind: doc
+  description: License.
+provenance:
+  license: MIT
+  citation:
+    text: Active Inference Institute — ants.
+instituteos:
+  tags:
+  - ants
+  - code
+  - inferants
+  - basis
+  - inference
+capabilities:
+- documentation
+tasks:
+  inventory:
+    cmd: git ls-files
+    description: List tracked files.
