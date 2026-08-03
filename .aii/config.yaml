@@ -1,13 +1,15 @@
 # AII sidecar — InstituteOS metadata. Schema: instituteos.platform.aii_sidecar
 meta:
-  updated: '2026-06-30'
+  updated: '2026-08-02'
 repo:
   name: ants
   slug: ants
   full_name: ActiveInferenceInstitute/ants
-  description: Code for [Active inferants The basis for an active inference framework
-    for ant colony behavior](https://www.researchgate.net/publication/348003553_Active_inferants_The_basis_for_an_active_inference_framework_for_ant_colony_behavior)
-    by…
+  description: >-
+    Code for the computational model in Friedman et al. (2021), "Active
+    Inferants: An Active Inference Framework for Ant Colony Behavior"
+    (Front. Behav. Neurosci. 15:647732). Active-inference MDP simulation
+    of stigmergic ant colony foraging in a 40x40 T-maze.
 institute:
   category: research-software
   steward: Active Inference Institute
@@ -24,14 +26,29 @@ ecosystem:
 artifacts:
 - path: README.md
   kind: doc
-  description: Repository overview.
+  description: Repository overview and quick start.
+- path: docs/running.md
+  kind: doc
+  description: Installation, commands, outputs, and runtime notes.
+- path: docs/model.md
+  kind: doc
+  description: Model and environment overview with configuration reference.
+- path: CONTRIBUTING.md
+  kind: doc
+  description: Contribution guidance.
+- path: CITATION.cff
+  kind: doc
+  description: Citation metadata for the software and companion paper.
 - path: LICENSE
   kind: doc
-  description: License.
+  description: License (MIT).
 provenance:
   license: MIT
   citation:
-    text: Active Inference Institute — ants.
+    text: >-
+      Friedman DA, Tschantz A, Ramstead MJD, Friston K, Constant A (2021).
+      Active Inferants: An Active Inference Framework for Ant Colony Behavior.
+      Front. Behav. Neurosci. 15:647732. doi:10.3389/fnbeh.2021.647732
 instituteos:
   tags:
   - ants
