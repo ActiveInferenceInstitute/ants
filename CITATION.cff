@@ -8,6 +8,7 @@ authors:
     given-names: Alec
 repository-code: "https://github.com/ActiveInferenceInstitute/ants"
 license: MIT
+version: "1.0.0"
 preferred-citation:
   type: article
   authors:

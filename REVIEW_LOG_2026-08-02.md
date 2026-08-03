@@ -43,3 +43,18 @@ Companion scoping file: `TO-DO.md`.
 
 - `git status` contains only intended changes (7 modified, 7 added).
 - Pushed to `origin/main`; `git status` shows up to date with `origin/main`.
+
+## Follow-up pass (2026-08-02, second session)
+
+Completed the previously deferred Major items (TO-DO.md):
+
+- Added a pytest test suite (`tests/`): config sanity, Env/MDP behavior, `main()` save/switch/ragged-path/ant-growth guards, plotting branches, and figure-script regression (strict-prior column shape). Result: 29 tests, 0 skipped, 0 failed, 99.3% coverage on `ants.py`+`config.py` (90% floor enforced via pytest addopts).
+- Added GitHub Actions CI (`.github/workflows/ci.yml`): uv + Python 3.13, `ruff check`, and pytest with coverage on every push/PR.
+- Added `pyproject.toml` (project metadata, dependencies, dev extras, ruff + pytest configuration) and `uv.lock`; removed `requirements.txt`.
+- Additional verified code fixes (all covered by new regression tests):
+  - `step_forward` could mark an ant as returning on a wall-blocked move while its trajectory was empty, and `step_backward` then crashed with `IndexError` (reproduced). `is_returning` is now only set when the move actually executes, and `step_backward` guards empty trajectories.
+  - `main()` with `init_ants < max_ants` produced ragged `ant_locations` rows → `ValueError` on numpy ≥ 1.24 (reproduced); now saved as an object array.
+  - `save_gif` switched from the deprecated `fps` kwarg to `duration` (imageio 2.37 deprecation warning).
+  - `main()` now creates `imgs/` itself when `save=True`.
+- Docs updated to match: README (uv/pip install, tests section, CI badge), `docs/running.md` (pyproject install, lockfile note), CONTRIBUTING.md (tests + CI workflow).
+- Heavy runs still not executed: full `figure_2.py`/`figure_3.py` experiments (see TO-DO.md).

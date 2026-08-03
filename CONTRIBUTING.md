@@ -4,23 +4,26 @@ This repository contains research code accompanying the Active Inferants paper. 
 
 ## Development workflow
 
-1. Create a virtual environment and install `requirements.txt`.
-2. Run the Python syntax check:
+1. Create a virtual environment and install the project with development extras:
 
    ```sh
-   .venv/bin/python -m py_compile ants.py config.py figure_1.py figure_2.py figure_3.py
+   python3 -m venv .venv
+   .venv/bin/python -m pip install -e ".[dev]"
    ```
 
-3. Run Ruff if available:
+   or, with uv: `uv sync --extra dev`.
+
+2. Run the test suite (pytest with a 90% coverage floor) and the linter:
 
    ```sh
+   .venv/bin/python -m pytest
    .venv/bin/ruff check .
    ```
 
-4. For simulation changes, run a short `main(..., save=False)` smoke test before attempting a full experiment.
-5. Do not commit generated `imgs/` output.
+3. For simulation changes, add or extend tests in `tests/` (the suite is fast and deterministic — no full 2,000-step experiments required for coverage).
+4. Do not commit generated `imgs/` output or coverage artifacts.
 
-There is currently no automated test suite or CI configuration in this repository. Document any changes to model assumptions or experiment parameters in the relevant source and documentation.
+Continuous integration (`.github/workflows/ci.yml`) runs ruff and the full pytest suite on every push to `main` and on pull requests, using the locked dependencies in `uv.lock`. When you change dependencies, regenerate the lockfile with `uv lock`.
 
 ## Scope
 

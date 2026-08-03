@@ -2,14 +2,16 @@
 
 ## Requirements
 
-Use Python 3 and install the three runtime dependencies from the repository root:
+Use Python 3.10 or later and install the project (plus the development extras for tests and linting) from the repository root:
 
 ```sh
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install -e ".[dev]"
 ```
 
-No dependency lockfile or command-line entry point is provided. The scripts are run directly from the repository root so their relative `imgs/` output paths resolve correctly.
+With [uv](https://docs.astral.sh/uv/): `uv sync --extra dev`.
+
+The runtime dependencies (numpy, matplotlib, imageio) are declared in `pyproject.toml`; the exact resolved versions are pinned in `uv.lock`. No command-line entry point is provided — the scripts are run directly from the repository root so their relative `imgs/` output paths resolve correctly.
 
 ## Reproduce the default experiments
 

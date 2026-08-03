@@ -40,11 +40,11 @@ Implemented in commits `247de94` (code fixes), `a4bc393` (documentation), `8f2b0
 
 ## Major
 
-- [ ] Add automated CI (e.g. GitHub Actions: ruff + py_compile) — deferred: no existing CI convention in the repo; single small script set; low value without a test suite.
-- [ ] Add a test suite — deferred: research code with no tests; out of scope for a documentation pass.
-- [ ] Pin dependencies or add a lockfile — deferred: no packaging convention in this repo; `requirements.txt` lists the three direct dependencies.
+- [x] Add a test suite — `tests/` (config sanity, Env/MDP behavior, `main()` outputs and guards, figure-script regression); pytest with a 90% coverage floor (99.3% measured, 0 skipped / 0 failed)
+- [x] Add automated CI — `.github/workflows/ci.yml` (ruff + pytest on push/PR, uv, Python 3.13, locked dependencies)
+- [x] Pin dependencies / lockfile — `pyproject.toml` declares runtime and dev dependencies; `uv.lock` pins exact resolutions; `requirements.txt` removed (single source of truth)
 
 ## Open / deferred
 
-- `figure_2.py` and `figure_3.py` full runs were not executed in this pass (5 × 4 repetitions of 2,000-step, up-to-200-ant experiments; heavy). `figure_1.py` was run end-to-end and its outputs verified.
-- No CI, no tests, no lockfile (see Major above).
+- `figure_2.py` and `figure_3.py` full runs were not executed in this pass (5 × 4 repetitions of 2,000-step, up-to-200-ant experiments; heavy). `figure_1.py` was run end-to-end and its outputs verified; the shared `main()` path is covered by the test suite.
+- mypy: not added — numpy-heavy untyped research code with no existing mypy config; out of proportion for this repository.
