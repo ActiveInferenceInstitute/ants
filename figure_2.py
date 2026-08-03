@@ -1,9 +1,9 @@
 from pathlib import Path
 
 import numpy as np
-from ants import main
 
 import config as cf
+from ants import main
 
 Path("imgs").mkdir(parents=True, exist_ok=True)
 
@@ -24,7 +24,7 @@ for o in range(cf.NUM_OBSERVATIONS):
 
 
 def run():
-    num_round_trips, paths, coeff = main(
+    num_round_trips, _paths, coeff = main(
         num_steps=NUM_STEPS,
         init_ants=INIT_ANTS,
         max_ants=MAX_ANTS,

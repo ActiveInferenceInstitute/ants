@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+
 from ants import main
 
 Path("imgs").mkdir(parents=True, exist_ok=True)
@@ -15,7 +16,7 @@ C = np.array([[0, 0, 0, 0, 0, 1, 2, 3, 4, 5]]).T
 
 
 def run():
-    num_round_trips, paths, coeff = main(
+    num_round_trips, _paths, coeff = main(
         num_steps=NUM_STEPS,
         init_ants=INIT_ANTS,
         max_ants=MAX_ANTS,

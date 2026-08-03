@@ -1,9 +1,9 @@
 from pathlib import Path
 
 import numpy as np
-from ants import main, plot_path
 
 import config as cf
+from ants import main, plot_path
 
 NAME = "main"
 NUM_STEPS = 2000
