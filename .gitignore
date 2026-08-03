@@ -6,3 +6,7 @@ __pycache__
 .rope*
 .vscode/
 imgs*/
+.pytest_cache/
+.coverage
+coverage.xml
+*.egg-info/
