@@ -1,8 +1,9 @@
+from pathlib import Path
+
 import numpy as np
-from pathlib import Path 
+from ants import main, plot_path
 
 import config as cf
-from ants import main, plot_path
 
 NAME = "main"
 NUM_STEPS = 2000
@@ -31,10 +32,8 @@ if __name__ == "__main__":
         ant_only_gif=False,
     )
     print(f"num_round_trips {num_round_trips} / coeff {coeff / MAX_ANTS}")
-    f = open(f"imgs/{NAME}.txt", "w")
-    f.write(f"num_round_trips {num_round_trips} / coeff {coeff / MAX_ANTS}")
-    f.close()
+    with open(f"imgs/{NAME}.txt", "w") as f:
+        f.write(f"num_round_trips {num_round_trips} / coeff {coeff / MAX_ANTS}")
 
-    
-    for i in range(len(paths)):
-        plot_path(np.random.choice(paths), f"imgs/path_{i}.png")
+    for i, path in enumerate(paths):
+        plot_path(path, f"imgs/path_{i}.png")

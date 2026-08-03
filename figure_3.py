@@ -1,7 +1,6 @@
-import numpy as np
-from pathlib import Path 
+from pathlib import Path
 
-import config as cf
+import numpy as np
 from ants import main
 
 Path("imgs").mkdir(parents=True, exist_ok=True)
@@ -12,7 +11,7 @@ NUM_STEPS = 2000
 INIT_ANTS = 200
 MAX_ANTS = 200
 
-C = np.array([[0, 0, 0, 0, 0, 1, 2, 3, 4, 5]])
+C = np.array([[0, 0, 0, 0, 0, 1, 2, 3, 4, 5]]).T
 
 
 def run():
@@ -26,9 +25,8 @@ def run():
         name=NAME,
     )
     print(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}")
-    f = open(f"imgs/{NAME}.txt", "a+")
-    f.write(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}\n")
-    f.close()
+    with open(f"imgs/{NAME}.txt", "a+") as f:
+        f.write(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}\n")
 
 
 if __name__ == "__main__":

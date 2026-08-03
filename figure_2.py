@@ -1,8 +1,9 @@
+from pathlib import Path
+
 import numpy as np
-from pathlib import Path 
+from ants import main
 
 import config as cf
-from ants import main
 
 Path("imgs").mkdir(parents=True, exist_ok=True)
 
@@ -33,9 +34,8 @@ def run():
         name=NAME,
     )
     print(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}")
-    f = open(f"imgs/{NAME}.txt", "a+")
-    f.write(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}\n")
-    f.close()
+    with open(f"imgs/{NAME}.txt", "a+") as f:
+        f.write(f"num_round_trips_{MAX_ANTS} {num_round_trips} / coeff {coeff}\n")
 
 
 if __name__ == "__main__":
