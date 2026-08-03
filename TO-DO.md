@@ -40,9 +40,9 @@ Implemented in commits `247de94` (code fixes), `a4bc393` (documentation), `8f2b0
 
 ## Major
 
-- [x] Add a test suite — `tests/` (config sanity, Env/MDP behavior, `main()` outputs and guards, figure-script regression); pytest with a 90% coverage floor (99.3% measured, 0 skipped / 0 failed)
-- [x] Add automated CI — `.github/workflows/ci.yml` (ruff + pytest on push/PR, uv, Python 3.13, locked dependencies)
-- [x] Pin dependencies / lockfile — `pyproject.toml` declares runtime and dev dependencies; `uv.lock` pins exact resolutions; `requirements.txt` removed (single source of truth)
+- [x] Add a test suite — `tests/` (config sanity, Env/MDP behavior, `main()` outputs and guards, figure-script regression); pytest with a 90% coverage floor (99.3% measured, 0 skipped / 0 failed) (✓ 984a192)
+- [x] Add automated CI — `.github/workflows/ci.yml` (ruff + pytest on push/PR, uv, Python 3.13, locked dependencies) (✓ dfcd9f5)
+- [x] Pin dependencies / lockfile — `pyproject.toml` declares runtime and dev dependencies; `uv.lock` pins exact resolutions; `requirements.txt` removed (single source of truth) (✓ aefbc04)
 
 ## Open / deferred
 
