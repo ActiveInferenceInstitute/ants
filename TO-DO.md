@@ -8,16 +8,18 @@ Scoping definitions:
 - **Medium** — stale section rewrite, doc restructure, added missing guide.
 - **Major** — large doc-system overhaul, cross-cutting refactors, new tooling.
 
+Implemented in commits `247de94` (code fixes), `a4bc393` (documentation), `8f2b054` (sidecar/gitignore); see REVIEW_LOG_2026-08-02.md.
+
 ## Minor
 
-- [x] README: fix heading/link text and add canonical DOI link to the published article — `README.md` (✓ commit `docs: ...`)
+- [x] README: fix heading/link text and add canonical DOI link to the published article — `README.md` (✓ a4bc393)
 - [x] README: broken-link and license-badge check (MIT badge matches `LICENSE`) — `README.md`
-- [x] `.gitignore`: remove duplicated `.ipynb_checkpoints` entry, add `.venv/` — `.gitignore`
-- [x] Figure scripts: remove trailing whitespace on `from pathlib import Path` lines — `figure_1.py`, `figure_2.py`, `figure_3.py`
-- [x] Figure scripts: replace manual `open()`/`close()` file writes with context managers — `figure_1.py`, `figure_2.py`, `figure_3.py`
-- [x] `figure_3.py`: unused `import config as cf` removed (ruff F401)
-- [x] `ants.py`: dead commented-out code blocks removed (trajectory-limit and distance-coefficient leftovers)
-- [x] `ants.py`: class and `main()` docstrings added; module docstring with paper reference
+- [x] `.gitignore`: remove duplicated `.ipynb_checkpoints` entry, add `.venv/` — `.gitignore` (✓ 8f2b054)
+- [x] Figure scripts: remove trailing whitespace on `from pathlib import Path` lines — `figure_1.py`, `figure_2.py`, `figure_3.py` (✓ 247de94)
+- [x] Figure scripts: replace manual `open()`/`close()` file writes with context managers — `figure_1.py`, `figure_2.py`, `figure_3.py` (✓ 247de94)
+- [x] `figure_3.py`: unused `import config as cf` removed (ruff F401) (✓ 247de94)
+- [x] `ants.py`: dead commented-out code blocks removed (trajectory-limit and distance-coefficient leftovers) (✓ 247de94)
+- [x] `ants.py`: class and `main()` docstrings added; module docstring with paper reference (✓ 247de94)
 
 ## Medium
 
