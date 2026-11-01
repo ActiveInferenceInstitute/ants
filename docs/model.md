@@ -22,6 +22,18 @@ The `MDP` contains:
 
 `MDP.step()` performs state inference using the previous action and then scores actions using the expected-free-energy calculation implemented in the source. It samples the next action from the resulting softmax distribution. The code also applies priors against staying in place and immediately reversing the previous action.
 
+## GNN specification
+
+`gnn/ant_colony_foraging.gnn.md` states the same model in
+[Generalized Notation Notation](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation)
+(GNN): the nine hidden states, ten pheromone observation levels and nine actions, the fresh
+likelihood `A`, the canonical `(next, previous, action)` transition tensor, the
+log-preference `C`, the uniform `D`, and the `E` habit prior that carries the
+stay-and-reverse priors. `python scripts/validate_gnn_spec.py` (or
+`python -m pytest tests/test_gnn_conformance.py`) re-extracts the specification from the
+GNN revision pinned in `gnn/upstream.json` and checks every matrix against `ants.py` and
+`config.py`.
+
 ## Experiments
 
 The three executable scripts define the experiments used by this repository:
