@@ -40,6 +40,43 @@ The test suite lives in `tests/` and runs under pytest with a 90% coverage floor
 
 Continuous integration runs the same checks on every push and pull request (see `.github/workflows/ci.yml`).
 
+## Model specification (GNN)
+
+The ant-colony foraging MDP is specified in
+[`gnn/ant_colony_foraging.gnn.md`](gnn/ant_colony_foraging.gnn.md) in
+[Generalized Notation Notation](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation)
+(GNN): the 9 focal-cell states, 10 pheromone-level observations, 9 actions, the
+environment-driven likelihood, the deterministic transition tensor, the log-preference
+vector, and the habit prior.
+
+The specification is validated against the GNN revision pinned in
+[`gnn/upstream.json`](gnn/upstream.json), read from that pinned commit rather than from
+the GNN checkout's working tree:
+
+```sh
+uv run python scripts/validate_gnn_spec.py   # strict gate (needs the GNN checkout)
+uv run pytest tests/test_gnn_conformance.py  # structural + pinned-parser checks
+```
+
+The gate parses the specification with the pinned GNN extractor and checks the extracted
+matrices against `ants.py`; the test module runs the same checks under pytest and skips
+only the pinned-parser half when the GNN checkout is unavailable. When editing the
+specification, start from GNN's [Start Here](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/START_HERE.md),
+[framework integration guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/gnn/integration/framework_integration_guide.md),
+and [syntax reference](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/gnn/reference/gnn_syntax.md).
+
+### Related repositories
+
+- [Active_InferAnts](https://github.com/ActiveInferenceInstitute/Active_InferAnts) — the
+  multi-language Active Inference framework that grew out of this model. Its framework
+  agent is specified separately, in that repository's `gnn/` directory.
+- [Active_Skillference](https://github.com/ActiveInferenceInstitute/Active_Skillference) —
+  the Active Inference / Free Energy Principle micro-learning platform; its discrete
+  active-inference agent kernel is specified in that repository's `gnn/` directory.
+
+Each concept has one canonical home: this repository owns the 2021 ant-colony foraging
+MDP; the other two specify their own models.
+
 ## Citation
 
 For the published article:
