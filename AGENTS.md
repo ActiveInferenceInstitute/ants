@@ -36,6 +36,11 @@ uv run pytest
 uv run python scripts/validate_gnn_spec.py   # needs GNN_ROOT (or the sibling checkout) and GNN_PYTHON
 ```
 
+CI runs the strict validator and `tests/test_gnn_conformance.py` in the
+`gnn conformance (pinned v5.0.3)` job, which fetches the pinned revision from the
+public upstream repository and provisions its interpreter, so the pin is
+re-checked on every push and pull request.
+
 ## Editing the model
 
 - Changing `config.py` dimensions or the `create_ant` / `MDP` structure requires updating
