@@ -42,3 +42,6 @@ uv run python scripts/validate_gnn_spec.py   # needs GNN_ROOT (or the sibling ch
   the GNN specification and the checks in `gnn_conformance.py` in the same change.
 - Keep the pin at the newest GNN release; when bumping it, update `gnn/upstream.json`
   and the canonical values asserted in `tests/test_gnn_conformance.py`.
+- GNN's [downstream adoption
+  guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/main/docs/gnn/integration/downstream_adoption.md)
+  documents the adoption patterns, pin discipline, and drift-guard checks used here.
