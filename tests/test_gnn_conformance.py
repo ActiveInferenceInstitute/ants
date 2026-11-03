@@ -3,10 +3,13 @@
 The specification is validated with the pinned GNN revision when the GNN
 checkout is available; the structural checks (pin record, sections, declared
 dimensions against config.py) always run so CI still guards the specification.
+When ``GNN_ROOT`` selects a checkout explicitly (as CI does after provisioning
+the pinned revision), an unusable checkout is a failure, never a skip.
 """
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -53,6 +56,8 @@ def extracted_model() -> dict:
     try:
         return extract_spec()
     except GnnUnavailable as exc:
+        if os.environ.get("GNN_ROOT"):
+            pytest.fail(f"GNN_ROOT selects a checkout, but the pinned parser is unavailable: {exc}")
         pytest.skip(f"pinned GNN checkout unavailable: {exc}")
 
 
