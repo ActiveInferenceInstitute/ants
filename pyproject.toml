@@ -7,7 +7,7 @@ name = "ants"
 version = "1.0.0"
 description = "Active inference simulation of ant colony foraging (companion code to Friedman et al., 2021)."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Alec Tschantz" }]
 keywords = ["active-inference", "ants", "foraging", "simulation", "stigmergy"]
@@ -32,8 +32,9 @@ testpaths = ["tests"]
 addopts = "--cov=ants --cov=config --cov-report=term-missing --cov-fail-under=90"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py311"
 line-length = 100
 
 [tool.uv]
 required-version = "==0.13.7"
+constraint-dependencies = ["pillow>=13.0.0"]
