@@ -133,6 +133,27 @@ def test_plot_savefig_and_gif_frame(tmp_path, monkeypatch):
     assert os.path.exists("snap_ants.png")
 
 
+def _blue_pixels(frame):
+    """Count blue-dominant pixels: the colour Env.plot uses for returning ants."""
+    red = frame[:, :, 0].astype(int)
+    blue = frame[:, :, 2].astype(int)
+    return int(((blue > 200) & (red < 50)).sum())
+
+
+def test_plot_renders_returning_ants_as_blue_markers(tmp_path, monkeypatch):
+    """The backward-ant branch must place returning ants on the frame as the
+    blue scatter, separately from the red forward-ant scatter."""
+    monkeypatch.chdir(tmp_path)
+    env = Env()
+    forward = create_ant(cf.INIT_X, cf.INIT_Y, PREFERENCES)
+    returning = create_ant(cf.INIT_X - 5, cf.INIT_Y - 5, PREFERENCES)
+    baseline = env.plot([forward])
+    assert _blue_pixels(baseline) == 0
+    returning.is_returning = True
+    marked = env.plot([forward, returning])
+    assert _blue_pixels(marked) > 0
+
+
 # ---------------------------------------------------------------- MDP
 
 
