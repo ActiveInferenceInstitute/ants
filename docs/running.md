@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Use Python 3.10 or later and install the project (plus the development extras for tests and linting) from the repository root:
+Use Python 3.11 or later and install the project (plus the development extras for tests and linting) from the repository root:
 
 ```sh
 python3 -m venv .venv

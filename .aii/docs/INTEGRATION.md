@@ -45,6 +45,7 @@
 | `CITATION.cff` | `doc` | Citation metadata for the software and companion paper. |
 | `LICENSE` | `doc` | License (MIT). |
 | `AGENTS.md` | `doc` | Agent guidance. |
+| `gnn` | `doc` | GNN model specification and pinned upstream revision. |
 | `pyproject.toml` | `code` | Python package configuration. |
 | `tests` | `test` | Test suite. |
 | `docs` | `doc` | Documentation tree. |

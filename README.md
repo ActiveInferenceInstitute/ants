@@ -16,7 +16,7 @@ The simulation models ant-colony foraging in a 40 × 40 T-maze. Individual simul
 
 ## Quick start
 
-The project requires Python 3.10 or later. From the repository root:
+The project requires Python 3.11 or later. From the repository root:
 
 ```sh
 python3 -m venv .venv

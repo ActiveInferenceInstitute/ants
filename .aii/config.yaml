@@ -1,7 +1,7 @@
 # AII sidecar — InstituteOS metadata. Schema: aii_platform.aii_sidecar
 meta:
   sidecar_version: 1.2.1
-  updated: '2026-11-10'
+  updated: '2026-11-11'
 repo:
   name: ants
   slug: ants
@@ -12,6 +12,8 @@ repo:
     foraging in a 40x40 T-maze.'
 institute:
   category: research-software
+  status: active
+  maturity: wip
   steward: Active Inference Institute
 ecosystem:
   relations:
@@ -47,6 +49,9 @@ artifacts:
 - path: AGENTS.md
   kind: doc
   description: Agent guidance.
+- path: gnn
+  kind: doc
+  description: GNN model specification and pinned upstream revision.
 - path: pyproject.toml
   kind: code
   description: Python package configuration.
