@@ -39,6 +39,7 @@
 | Path | Kind | Description |
 | --- | --- | --- |
 | `README.md` | `doc` | Repository overview and quick start. |
+| `docs/README.md` | `doc` | Documentation folder guide and index. |
 | `docs/running.md` | `doc` | Installation, commands, outputs, and runtime notes. |
 | `docs/model.md` | `doc` | Model and environment overview with configuration reference. |
 | `CONTRIBUTING.md` | `doc` | Contribution guidance. |

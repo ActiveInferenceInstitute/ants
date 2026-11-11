@@ -1,5 +1,7 @@
 # Documentation index
 
+The folder guide and complete document list live in [README.md](README.md).
+
 - [Repository overview](../README.md)
 - [Running the simulations](running.md)
 - [Model overview](model.md)

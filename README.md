@@ -9,8 +9,11 @@ The simulation models ant-colony foraging in a 40 × 40 T-maze. Individual simul
 
 ## Documentation
 
+- [Documentation index](docs/README.md) — the folder guide for `docs/` and the
+  full list of repository documents.
 - [Running the simulations](docs/running.md) — installation, commands, outputs, and runtime notes.
 - [Model overview](docs/model.md) — environment, observations, MDP components, and parameters.
+- [Tests](tests/README.md) — what the suite covers and how to run it.
 - [Contributing](CONTRIBUTING.md) — scope, tests, and development guidance.
 - [Review TODO](TO-DO.md) — documentation review findings and status.
 

@@ -37,6 +37,7 @@ Implemented in commits `247de94` (code fixes), `a4bc393` (documentation), `8f2b0
 - [x] `figure_1.py`: write each completed path instead of `np.random.choice(paths)` (which raised for empty or same-length path lists)
 - [x] `ants.py`: `plot_path()` axis limits fixed — single-scalar `set_xlim/ylim` rendered inverted axes (verified visually); now explicit `0..GRID` ranges
 - [x] Ruff clean (`ruff check .` passes) and `py_compile` clean on all Python files
+- [x] Add folder guides for the `docs/` and `tests/` directories (purpose, document list, and test-file reference) — `docs/README.md`, `tests/README.md`
 
 ## Major
 

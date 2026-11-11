@@ -31,6 +31,9 @@ artifacts:
 - path: README.md
   kind: doc
   description: Repository overview and quick start.
+- path: docs/README.md
+  kind: doc
+  description: Documentation folder guide and index.
 - path: docs/running.md
   kind: doc
   description: Installation, commands, outputs, and runtime notes.
