@@ -88,3 +88,11 @@ For the published article:
 > Friedman DA, Tschantz A, Ramstead MJD, Friston K, Constant A (2021). Active Inferants: An Active Inference Framework for Ant Colony Behavior. *Frontiers in Behavioral Neuroscience*, 15, 647732. https://doi.org/10.3389/fnbeh.2021.647732
 
 Machine-readable citation metadata is provided in [CITATION.cff](CITATION.cff). The repository's source code is released under the MIT License. See [LICENSE](LICENSE). The article is open access under the license specified by its publisher; consult the publication for the article's reuse terms.
+
+## InstituteOS sidecar
+
+This repository carries a committed [`.aii/`](.aii/README.md) sidecar with curated
+InstituteOS metadata (`aii-sidecar/v1`): category, maturity, ecosystem relations,
+key artifacts, provenance, and portable tasks. It is read by
+[InstituteOS](https://github.com/ActiveInferenceInstitute/InstituteOS) tooling and
+does not affect the project's build or runtime.

@@ -1,0 +1,11 @@
+{
+  "schema": "aii-readiness/v1",
+  "repo": "ActiveInferenceInstitute/ants",
+  "tier": "python-library",
+  "standard_version": "1.0.0",
+  "baseline": {
+    "commit": "c267a40850afce1460e2b511c3d0b590fadc980e",
+    "measured_at": "2026-11-10"
+  },
+  "waivers": []
+}
