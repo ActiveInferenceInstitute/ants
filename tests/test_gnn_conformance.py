@@ -9,6 +9,7 @@ the pinned revision), an unusable checkout is a failure, never a skip.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -68,6 +69,17 @@ def test_pin_record_is_canonical() -> None:
     assert pin.commit == CANONICAL_PIN["commit"]
 
 
+@pytest.mark.parametrize(
+    "schema_fields",
+    [{}, {"schema": None}, {"schema": "gnn-importer-pin/v2"}, {"schema": 1}],
+)
+def test_invalid_pin_schema_is_rejected(tmp_path, schema_fields) -> None:
+    pin = tmp_path / "upstream.json"
+    pin.write_text(json.dumps(CANONICAL_PIN | schema_fields), encoding="utf-8")
+    with pytest.raises(ConformanceError, match="schema must be gnn-importer-pin/v1"):
+        load_pin(pin)
+
+
 def test_spec_declares_every_section() -> None:
     text = SPEC_PATH.read_text(encoding="utf-8")
     for section in REQUIRED_SECTIONS:
@@ -114,7 +126,10 @@ def test_missing_pin_file_is_rejected(tmp_path) -> None:
 
 def test_incomplete_pin_record_is_rejected(tmp_path) -> None:
     pin = tmp_path / "upstream.json"
-    pin.write_text('{"repository": "x", "tag": "v1"}', encoding="utf-8")
+    pin.write_text(
+        '{"schema": "gnn-importer-pin/v1", "repository": "x", "tag": "v1"}',
+        encoding="utf-8",
+    )
     with pytest.raises(ConformanceError, match="missing the 'commit' field"):
         load_pin(pin)
 

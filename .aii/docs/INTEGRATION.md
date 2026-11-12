@@ -56,7 +56,7 @@
 | Task | Command | Working directory | Description |
 | --- | --- | --- | --- |
 | `inventory` | `git ls-files` | `.` | List tracked files. |
-| `test` | `uv run pytest tests/ -q` | `.` | Run the test suite. |
+| `test` | `uv run python scripts/gate.py test` | `.` | Run the test suite. |
 
 ## Validation
 
