@@ -1,15 +1,17 @@
 """Conformance tests for the ant colony foraging GNN specification.
 
 The specification is validated with the pinned GNN revision when the GNN
-checkout is available; the structural checks (pin record, sections, declared
-dimensions against config.py) always run so CI still guards the specification.
-When ``GNN_ROOT`` selects a checkout explicitly (as CI does after provisioning
-the pinned revision), an unusable checkout is a failure, never a skip.
+checkout is available; the structural checks (specification sections and
+declared dimensions against config.py) always run so CI still guards the
+specification. The pin itself is read by the ``gnn.importers`` reader shipped
+in the pinned revision — this repository carries no pin shape of its own, and
+the ``gnn`` arm runs that reader directly. When ``GNN_ROOT`` selects a checkout
+explicitly (as CI does after provisioning the pinned revision), an unusable
+checkout is a failure, never a skip.
 """
 
 from __future__ import annotations
 
-import json
 import os
 import re
 import sys
@@ -23,11 +25,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from gnn_conformance import (
     SPEC_PATH,
-    ConformanceError,
     GnnUnavailable,
     check_conformance,
     extract_spec,
-    load_pin,
+    pinned_pin,
 )
 
 REQUIRED_SECTIONS = (
@@ -45,12 +46,6 @@ REQUIRED_SECTIONS = (
     "Signature",
 )
 
-CANONICAL_PIN = {
-    "repository": "ActiveInferenceInstitute/Generalized_Notation_Notation",
-    "tag": "v5.0.3",
-    "commit": "8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1",
-}
-
 
 @pytest.fixture(scope="module")
 def extracted_model() -> dict:
@@ -62,22 +57,15 @@ def extracted_model() -> dict:
         pytest.skip(f"pinned GNN checkout unavailable: {exc}")
 
 
-def test_pin_record_is_canonical() -> None:
-    pin = load_pin()
-    assert pin.repository == CANONICAL_PIN["repository"]
-    assert pin.tag == CANONICAL_PIN["tag"]
-    assert pin.commit == CANONICAL_PIN["commit"]
-
-
-@pytest.mark.parametrize(
-    "schema_fields",
-    [{}, {"schema": None}, {"schema": "gnn-importer-pin/v2"}, {"schema": 1}],
-)
-def test_invalid_pin_schema_is_rejected(tmp_path, schema_fields) -> None:
-    pin = tmp_path / "upstream.json"
-    pin.write_text(json.dumps(CANONICAL_PIN | schema_fields), encoding="utf-8")
-    with pytest.raises(ConformanceError, match="schema must be gnn-importer-pin/v1"):
-        load_pin(pin)
+def test_pin_is_read_by_the_shipped_reader() -> None:
+    try:
+        pin = pinned_pin()
+    except GnnUnavailable as exc:
+        if os.environ.get("GNN_ROOT"):
+            pytest.fail(f"GNN_ROOT selects a checkout, but the shipped reader is unavailable: {exc}")
+        pytest.skip(f"pinned GNN checkout unavailable: {exc}")
+    assert pin.path.name == "upstream.json"
+    assert pin.schema == "gnn-importer-pin/v1"
 
 
 def test_spec_declares_every_section() -> None:
@@ -117,25 +105,3 @@ def test_extraction_uses_schema_major_one(extracted_model: dict) -> None:
 def test_spec_conforms_to_implementation(extracted_model: dict) -> None:
     checks = check_conformance(extracted_model)
     assert len(checks) == 6
-
-
-def test_missing_pin_file_is_rejected(tmp_path) -> None:
-    with pytest.raises(ConformanceError, match="is missing"):
-        load_pin(tmp_path / "upstream.json")
-
-
-def test_incomplete_pin_record_is_rejected(tmp_path) -> None:
-    pin = tmp_path / "upstream.json"
-    pin.write_text(
-        '{"schema": "gnn-importer-pin/v1", "repository": "x", "tag": "v1"}',
-        encoding="utf-8",
-    )
-    with pytest.raises(ConformanceError, match="missing the 'commit' field"):
-        load_pin(pin)
-
-
-def test_malformed_pin_file_is_rejected(tmp_path) -> None:
-    pin = tmp_path / "upstream.json"
-    pin.write_text("not json", encoding="utf-8")
-    with pytest.raises(ConformanceError, match="is unreadable"):
-        load_pin(pin)

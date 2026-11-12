@@ -27,7 +27,7 @@ deselects it. CI runs the same gate arms on every push and pull request (see
 | [`test_config.py`](test_config.py) | Grid dimensions, the nine-action map and opposite-action table, and the observation/state/action counts in [`../config.py`](../config.py). |
 | [`test_ants.py`](test_ants.py) | Environment initialization and observation reconstruction, `MDP` inference/action selection, `create_ant`, `plot_path`, and the `main()` run path including its `save=False` guards. |
 | [`test_figures.py`](test_figures.py) | Regression checks for [`../figure_1.py`](../figure_1.py), [`../figure_2.py`](../figure_2.py), and [`../figure_3.py`](../figure_3.py); imports them in a scratch directory so their `imgs/` side effect never touches the repository. |
-| [`test_gnn_conformance.py`](test_gnn_conformance.py) | Pin record and declared dimensions against [`../config.py`](../config.py), plus validation of [`../gnn/ant_colony_foraging.gnn.md`](../gnn/ant_colony_foraging.gnn.md) with the pinned upstream parser when the GNN checkout is available. |
+| [`test_gnn_conformance.py`](test_gnn_conformance.py) | Specification sections and declared dimensions against [`../config.py`](../config.py), plus validation of [`../gnn/ant_colony_foraging.gnn.md`](../gnn/ant_colony_foraging.gnn.md) with the pinned upstream reader and parser when the GNN checkout is available. |
 
 The simulation is stochastic and does not set a random seed, so tests assert
 structure and invariants rather than run-to-run numeric equality.

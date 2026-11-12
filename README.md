@@ -62,23 +62,25 @@ vector, and the habit prior.
 
 The specification is validated against the GNN revision pinned in
 [`gnn/upstream.json`](gnn/upstream.json), read from that pinned commit rather than from
-the GNN checkout's working tree:
+the GNN checkout's working tree. The pin itself is read by `gnn.importers`, the reader
+shipped in that revision — this repository carries no pin reader of its own:
 
 ```sh
-uv run python scripts/validate_gnn_spec.py   # strict gate (needs the GNN checkout)
-uv run pytest tests/test_gnn_conformance.py  # structural + pinned-parser checks
+uv run python scripts/gate.py gnn           # reader check + strict validator + conformance tests
+uv run pytest tests/test_gnn_conformance.py # specification sections and dimensions under pytest
 ```
 
-The gate parses the specification with the pinned GNN extractor and checks the extracted
-matrices against `ants.py`; the test module runs the same checks under pytest and skips
-only the pinned-parser half when the GNN checkout is unavailable. When editing the
-specification, start from GNN's [Start Here](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/START_HERE.md),
-[framework integration guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/gnn/integration/framework_integration_guide.md),
-and [syntax reference](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.0.3/docs/gnn/reference/gnn_syntax.md).
+The arm first runs `python -m gnn.importers check --repo .` from the pinned environment,
+which reads the pin and validates the specification with the pinned parser; the gate then
+parses the specification with the pinned GNN extractor and checks the extracted matrices
+against `ants.py`. The test module runs the same model checks under pytest and skips only
+the pinned-parser half when the GNN checkout is unavailable. When editing the
+specification, start from GNN's [Start Here](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.1.0/docs/START_HERE.md),
+[framework integration guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.1.0/docs/gnn/integration/framework_integration_guide.md),
+and [syntax reference](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.1.0/docs/gnn/reference/gnn_syntax.md).
 For the wider picture (the adoption patterns sibling repositories use, pin discipline, and
 the drift guard these checks implement), see GNN's
-[downstream adoption guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/main/docs/gnn/integration/downstream_adoption.md),
-linked on GNN's default branch because it landed after the v5.0.3 pin.
+[downstream adoption guide](https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation/blob/v5.1.0/docs/gnn/integration/downstream_adoption.md).
 
 ### Related repositories
 
