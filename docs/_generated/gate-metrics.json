@@ -1,0 +1,126 @@
+{
+  "baseline": {
+    "arms": {
+      "docs": {
+        "commands": [],
+        "facts": {
+          "note": "no documentation or link check existed"
+        },
+        "seconds": null
+      },
+      "gnn": {
+        "commands": [
+          "uv run python scripts/validate_gnn_spec.py",
+          "uv run pytest tests/test_gnn_conformance.py -q --no-cov"
+        ],
+        "facts": {
+          "tests_passed": "8"
+        },
+        "seconds": 8.24
+      },
+      "lint": {
+        "commands": [
+          "uv run ruff check ."
+        ],
+        "facts": {
+          "ruff": "true"
+        },
+        "seconds": 0.07
+      },
+      "test": {
+        "commands": [
+          "uv run pytest"
+        ],
+        "facts": {
+          "coverage_percent": "100.00",
+          "note": "31.17 s at 12:45Z; the identical command re-run at 12:56Z took 43.54 s, so this host varies by roughly 40% (stochastic simulation plus host load)",
+          "tests_passed": "38"
+        },
+        "seconds": 31.17
+      }
+    },
+    "label": "before the single gate: each CI step run on its own",
+    "measured_at": "2026-11-12T12:45:00Z",
+    "platform": "darwin-arm64",
+    "python": "3.15.2"
+  },
+  "latest": {
+    "arms": {
+      "docs": {
+        "arm": "docs",
+        "commands": [
+          "python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/check_docs.py"
+        ],
+        "exit_code": 0,
+        "facts": {},
+        "measured_at": "2026-11-12T12:57:04Z",
+        "platform": "darwin-arm64",
+        "python": "3.15.2",
+        "seconds": 0.17
+      },
+      "gnn": {
+        "arm": "gnn",
+        "commands": [
+          "python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/validate_gnn_spec.py",
+          "python -m pytest tests/test_gnn_conformance.py -q --no-cov"
+        ],
+        "exit_code": 0,
+        "facts": {
+          "tests_passed": "8"
+        },
+        "measured_at": "2026-11-12T12:57:57Z",
+        "platform": "darwin-arm64",
+        "python": "3.15.2",
+        "seconds": 8.94
+      },
+      "lint": {
+        "arm": "lint",
+        "commands": [
+          "python -m ruff check ."
+        ],
+        "exit_code": 0,
+        "facts": {
+          "ruff": "true"
+        },
+        "measured_at": "2026-11-12T12:57:04Z",
+        "platform": "darwin-arm64",
+        "python": "3.15.2",
+        "seconds": 0.11
+      },
+      "test": {
+        "arm": "test",
+        "commands": [
+          "python -m pytest"
+        ],
+        "exit_code": 0,
+        "facts": {
+          "coverage_percent": "100.00",
+          "tests_passed": "38"
+        },
+        "measured_at": "2026-11-12T12:57:48Z",
+        "platform": "darwin-arm64",
+        "python": "3.15.2",
+        "seconds": 43.31
+      },
+      "test-fast": {
+        "arm": "test-fast",
+        "commands": [
+          "python -m pytest -q --no-cov -m not slow"
+        ],
+        "exit_code": 0,
+        "facts": {
+          "tests_passed": "37"
+        },
+        "measured_at": "2026-11-12T12:58:07Z",
+        "platform": "darwin-arm64",
+        "python": "3.15.2",
+        "seconds": 9.92
+      }
+    },
+    "label": "scripts/gate.py on this host",
+    "measured_at": "2026-11-12T12:58:07Z",
+    "platform": "darwin-arm64",
+    "python": "3.15.2"
+  },
+  "schema": "ants-gate-metrics/v1"
+}
