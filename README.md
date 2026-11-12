@@ -9,8 +9,9 @@ The simulation models ant-colony foraging in a 40 × 40 T-maze. Individual simul
 
 ## Documentation
 
-- [Documentation index](docs/README.md) — the folder guide for `docs/` and the
-  full list of repository documents.
+- [Documentation hub](docs/README.md) — the folder guide for `docs/`.
+- [Documentation index](docs/documentation-index.md) — the flat list of long-lived documents.
+- [Gate and CI run guide](docs/RUN_GUIDE.md) — the gate entry point, its arms, and measured timings.
 - [Running the simulations](docs/running.md) — installation, commands, outputs, and runtime notes.
 - [Model overview](docs/model.md) — environment, observations, MDP components, and parameters.
 - [Tests](tests/README.md) — what the suite covers and how to run it.
@@ -37,11 +38,18 @@ The test suite lives in `tests/` and runs under pytest with a 90% coverage floor
 
 ```sh
 .venv/bin/python -m pip install -e ".[dev]"
-.venv/bin/python -m pytest        # full suite, ~99% coverage (90% floor)
-.venv/bin/ruff check .            # lint
+.venv/bin/python scripts/gate.py fast   # default arm: lint + docs + fast tests
+.venv/bin/python scripts/gate.py all    # every arm, including the full suite
 ```
 
-Continuous integration runs the same checks on every push and pull request (see `.github/workflows/ci.yml`).
+With uv, `uv sync --extra dev` followed by `uv run python scripts/gate.py all`.
+The arms are `lint`, `test-fast`, `test`, `docs`, and `gnn`; `test` runs the full
+suite under the 90% coverage floor and `gnn` re-validates the specification
+against the pinned parser. The arm table, measured timings, and the CI job
+mapping are in [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md) and
+[`docs/_generated/gate-metrics.md`](docs/_generated/gate-metrics.md).
+
+Continuous integration runs the same gate arms on every push and pull request (see `.github/workflows/ci.yml`).
 
 ## Model specification (GNN)
 

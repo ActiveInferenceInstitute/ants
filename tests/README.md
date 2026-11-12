@@ -8,14 +8,17 @@ fails when a checkout is explicitly selected) rather than needing the network.
 
 ```sh
 uv sync --extra dev
-uv run pytest        # full suite with the 90% coverage floor
-uv run ruff check .  # lint
+uv run python scripts/gate.py fast   # default arm: slow test excluded, no coverage
+uv run python scripts/gate.py test   # full suite with the 90% coverage floor
 ```
 
 `pyproject.toml` sets `testpaths = ["tests"]` and
-`--cov=ants --cov=config --cov-fail-under=90`. CI runs the same `ruff` and
-`pytest` checks on every push and pull request (see
-[`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)).
+`--cov=ants --cov=config --cov-fail-under=90`. The `slow` marker separates
+`tests/test_ants.py::test_main_save_true_writes_outputs` (the full-simulation
+run that dominates suite time) from the rest; only the `test-fast` arm
+deselects it. CI runs the same gate arms on every push and pull request (see
+[`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) and
+[`../docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md)).
 
 ## Files
 
