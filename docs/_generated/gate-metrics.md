@@ -23,12 +23,12 @@ Measured: 2026-11-12T12:45:00Z · host: darwin-arm64 · Python: 3.15.2
 
 ## Latest — scripts/gate.py on this host
 
-Measured: 2026-11-12T13:01:48Z · host: darwin-arm64 · Python: 3.15.2
+Measured: 2026-11-12T16:24:54Z · host: darwin-arm64 · Python: 3.15.2
 
 | Arm | Command | Wall time (s) | Facts |
 | --- | --- | ---: | --- |
-| `lint` | `python -m ruff check .` | 0.07 | ruff=true |
+| `lint` | `python -m ruff check .` | 0.09 | ruff=true |
 | `test-fast` | `python -m pytest -q --no-cov -m not slow` | 8.43 | tests_passed=37 |
-| `test` | `python -m pytest` | 32.82 | coverage_percent=100.00, tests_passed=38 |
-| `docs` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/check_docs.py` | 0.20 | — |
-| `gnn` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/validate_gnn_spec.py`<br>`python -m pytest tests/test_gnn_conformance.py -q --no-cov` | 6.64 | tests_passed=8 |
+| `test` | `python -m pytest` | 8.61 | coverage_percent=100.00, tests_passed=35 |
+| `docs` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/check_docs.py` | 0.21 | — |
+| `gnn` | `python -m gnn.importers check --repo .`<br>`python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/validate_gnn_spec.py`<br>`python -m pytest tests/test_gnn_conformance.py -q --no-cov` | 2.12 | tests_passed=5 |

@@ -29,10 +29,11 @@ The `MDP` contains:
 (GNN): the nine hidden states, ten pheromone observation levels and nine actions, the fresh
 likelihood `A`, the canonical `(next, previous, action)` transition tensor, the
 log-preference `C`, the uniform `D`, and the `E` habit prior that carries the
-stay-and-reverse priors. `python scripts/validate_gnn_spec.py` (or
-`python -m pytest tests/test_gnn_conformance.py`) re-extracts the specification from the
-GNN revision pinned in `gnn/upstream.json` and checks every matrix against `ants.py` and
-`config.py`.
+stay-and-reverse priors. `python scripts/gate.py gnn` reads the pin with
+`gnn.importers` (the reader shipped in the pinned revision), then re-extracts the
+specification from the GNN revision pinned in `gnn/upstream.json` and checks every matrix
+against `ants.py` and `config.py`; `python -m pytest tests/test_gnn_conformance.py` runs
+the same model checks under pytest.
 
 ## Experiments
 

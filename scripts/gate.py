@@ -29,6 +29,7 @@ import json
 import os
 import platform
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -41,6 +42,7 @@ SCRIPTS = REPO_ROOT / "scripts"
 CACHE = REPO_ROOT / ".gate-cache"
 RECEIPTS = CACHE / "latest.json"
 GNN_PIN = REPO_ROOT / "gnn" / "upstream.json"
+PINNED_SOURCE = CACHE / "gnn-src"
 METRICS_JSON = REPO_ROOT / "docs" / "_generated" / "gate-metrics.json"
 
 # Summary facts parsed from arm output; they land in the receipt and the
@@ -60,6 +62,10 @@ class Arm:
     summary: str
     commands: tuple[tuple[str, ...], ...]
     needs_gnn: bool = False
+    #: Commands that run with the pinned GNN interpreter and the pinned source
+    #: tree on ``PYTHONPATH``, before ``commands``. An arm cannot name that
+    #: interpreter itself: ``provision_gnn`` resolves it once per run.
+    pinned_commands: tuple[tuple[str, ...], ...] = ()
 
 
 def arms() -> dict[str, Arm]:
@@ -89,12 +95,14 @@ def arms() -> dict[str, Arm]:
         ),
         "gnn": Arm(
             "gnn",
-            "pinned-upstream GNN conformance: strict validator plus conformance tests",
+            "pinned-upstream GNN conformance: shipped importer reader, strict validator, "
+            "conformance tests",
             (
                 (python, str(SCRIPTS / "validate_gnn_spec.py")),
                 (python, "-m", "pytest", "tests/test_gnn_conformance.py", "-q", "--no-cov"),
             ),
             needs_gnn=True,
+            pinned_commands=(("-m", "gnn.importers", "check", "--repo", "."),),
         ),
     }
 
@@ -141,8 +149,23 @@ def _must(command: list[str]) -> str:
     return result.stdout.strip()
 
 
-def _read_pin() -> dict[str, str]:
-    return json.loads(GNN_PIN.read_text(encoding="utf-8"))
+def _pinned_fetch_target() -> dict[str, str]:
+    """Return the pin fields provisioning needs to fetch the pinned revision.
+
+    This is the one read of the pin that cannot be delegated to the shipped
+    reader: the pinned revision has to be materialized before
+    ``gnn.importers`` — which ships inside it — can be imported. The reader
+    validates the pin itself once the checkout exists, and the arm's
+    ``python -m gnn.importers check --repo .`` command is what reports its
+    findings.
+    """
+
+    pin = json.loads(GNN_PIN.read_text(encoding="utf-8"))
+    return {
+        "repository": str(pin["repository"]),
+        "tag": str(pin["tag"]),
+        "commit": str(pin["commit"]),
+    }
 
 
 def _fetch_pinned(pin: dict[str, str]) -> Path:
@@ -219,37 +242,53 @@ def provision_gnn() -> dict[str, str]:
     the module's own default checkout next to this repository is used when it
     carries the pinned tag and commit, and the pinned revision is fetched into
     ``.gate-cache/gnn`` when it is not.
+
+    ``src/gnn`` at the pinned commit is extracted into ``.gate-cache/gnn-src``
+    and exported both on ``PYTHONPATH`` and as ``GNN_SOURCE``, so every command
+    that imports ``gnn`` — the reader check and the extractor — runs the pinned
+    revision rather than a checkout's working tree.
     """
 
+    target = _pinned_fetch_target()
     env = dict(os.environ)
-    if env.get("GNN_ROOT"):
-        print(f"==> gnn: using GNN_ROOT={env['GNN_ROOT']}", flush=True)
-        return env
-
-    pin = _read_pin()
     sys.path.insert(0, str(REPO_ROOT))
-    from gnn_conformance import ConformanceError, Pin, resolve_gnn_root, verify_pin
+    from gnn_conformance import ConformanceError, pinned_source, resolve_gnn_root, verify_pin
 
-    record = Pin(repository=pin["repository"], tag=pin["tag"], commit=pin["commit"])
     root: Path | None = None
-    try:
-        candidate = resolve_gnn_root(None)
-        verify_pin(candidate, record)
-        root = candidate
-    except ConformanceError as exc:
-        print(f"==> gnn: default checkout unusable ({exc}); fetching the pin", flush=True)
+    explicit = env.get("GNN_ROOT")
+    if explicit:
+        root = Path(explicit).expanduser().resolve()
+        try:
+            verify_pin(root, target["tag"], target["commit"])
+        except ConformanceError as exc:
+            raise SystemExit(f"GNN_ROOT does not carry the pinned revision: {exc}") from exc
+        print(f"==> gnn: using GNN_ROOT={root}", flush=True)
+    else:
+        try:
+            candidate = resolve_gnn_root(None)
+            verify_pin(candidate, target["tag"], target["commit"])
+            root = candidate
+        except ConformanceError as exc:
+            print(f"==> gnn: default checkout unusable ({exc}); fetching the pin", flush=True)
 
     if root is None:
-        root = _fetch_pinned(pin)
-        verify_pin(root, record)
+        root = _fetch_pinned(target)
+        verify_pin(root, target["tag"], target["commit"])
         env["GNN_PYTHON"] = str(_gnn_venv(root))
     elif not env.get("GNN_PYTHON") and (root / ".venv" / "bin" / "python").is_file():
         env["GNN_PYTHON"] = str(root / ".venv" / "bin" / "python")
 
+    if PINNED_SOURCE.is_dir():
+        shutil.rmtree(PINNED_SOURCE)
+    source = pinned_source(root, target["commit"], PINNED_SOURCE)
+    existing = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = f"{source}{os.pathsep}{existing}" if existing else str(source)
+
     env["GNN_ROOT"] = str(root)
+    env["GNN_SOURCE"] = str(source)
     print(
-        f"==> gnn: pin {pin['tag']} ({pin['commit']}) at {root}, "
-        f"interpreter {env.get('GNN_PYTHON', 'project python')}",
+        f"==> gnn: pin {target['tag']} ({target['commit']}) at {root}, "
+        f"pinned source {source}, interpreter {env.get('GNN_PYTHON', 'project python')}",
         flush=True,
     )
     return env
@@ -286,11 +325,15 @@ def _merge_receipt(name: str, entry: dict) -> None:
 
 def run_arm(arm: Arm) -> dict:
     env = provision_gnn() if arm.needs_gnn else dict(os.environ)
+    pinned_python = env.get("GNN_PYTHON") or sys.executable
+    commands = list(arm.commands)
+    if arm.pinned_commands:
+        commands = [(pinned_python, *command) for command in arm.pinned_commands] + commands
     print(f"\n=== {arm.name}: {arm.summary} ===", flush=True)
     started = time.perf_counter()
     output = ""
     status = 0
-    for command in arm.commands:
+    for command in commands:
         status, chunk = _run_streaming(command, env)
         output += chunk
         if status != 0:
@@ -299,7 +342,8 @@ def run_arm(arm: Arm) -> dict:
     entry = {
         "arm": arm.name,
         "commands": [
-            " ".join(command).replace(sys.executable, "python") for command in arm.commands
+            " ".join(command).replace(pinned_python, "python").replace(sys.executable, "python")
+            for command in commands
         ],
         "exit_code": status,
         "seconds": elapsed,

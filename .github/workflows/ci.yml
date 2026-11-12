@@ -40,8 +40,9 @@ jobs:
     timeout-minutes: 60
     # Validates gnn/ant_colony_foraging.gnn.md with the upstream parser revision
     # pinned in gnn/upstream.json. scripts/gate.py (the `gnn` arm) fetches the
-    # pinned commit and tag, provisions its interpreter, and then runs the strict
-    # validator plus tests/test_gnn_conformance.py; the gate never skips.
+    # pinned commit and tag, provisions its interpreter, extracts the pinned
+    # source, and then runs the shipped importer reader, the strict validator and
+    # tests/test_gnn_conformance.py; the gate never skips.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
