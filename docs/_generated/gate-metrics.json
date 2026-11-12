@@ -33,7 +33,7 @@
         ],
         "facts": {
           "coverage_percent": "100.00",
-          "note": "31.17 s at 12:45Z; the identical command re-run at 12:56Z took 43.54 s, so this host varies by roughly 40% (stochastic simulation plus host load)",
+          "note": "single-run readings of this identical command on this host: 31.17 s at 12:45Z, 43.54 s at 12:56Z, 46.29 s; the spread is ~40%, so do not compare single runs across changes",
           "tests_passed": "38"
         },
         "seconds": 31.17
@@ -53,10 +53,10 @@
         ],
         "exit_code": 0,
         "facts": {},
-        "measured_at": "2026-11-12T12:57:04Z",
+        "measured_at": "2026-11-12T13:01:00Z",
         "platform": "darwin-arm64",
         "python": "3.15.2",
-        "seconds": 0.17
+        "seconds": 0.2
       },
       "gnn": {
         "arm": "gnn",
@@ -68,10 +68,10 @@
         "facts": {
           "tests_passed": "8"
         },
-        "measured_at": "2026-11-12T12:57:57Z",
+        "measured_at": "2026-11-12T13:01:39Z",
         "platform": "darwin-arm64",
         "python": "3.15.2",
-        "seconds": 8.94
+        "seconds": 6.64
       },
       "lint": {
         "arm": "lint",
@@ -82,10 +82,10 @@
         "facts": {
           "ruff": "true"
         },
-        "measured_at": "2026-11-12T12:57:04Z",
+        "measured_at": "2026-11-12T13:01:00Z",
         "platform": "darwin-arm64",
         "python": "3.15.2",
-        "seconds": 0.11
+        "seconds": 0.07
       },
       "test": {
         "arm": "test",
@@ -97,10 +97,10 @@
           "coverage_percent": "100.00",
           "tests_passed": "38"
         },
-        "measured_at": "2026-11-12T12:57:48Z",
+        "measured_at": "2026-11-12T13:01:33Z",
         "platform": "darwin-arm64",
         "python": "3.15.2",
-        "seconds": 43.31
+        "seconds": 32.82
       },
       "test-fast": {
         "arm": "test-fast",
@@ -111,14 +111,14 @@
         "facts": {
           "tests_passed": "37"
         },
-        "measured_at": "2026-11-12T12:58:07Z",
+        "measured_at": "2026-11-12T13:01:48Z",
         "platform": "darwin-arm64",
         "python": "3.15.2",
-        "seconds": 9.92
+        "seconds": 8.43
       }
     },
     "label": "scripts/gate.py on this host",
-    "measured_at": "2026-11-12T12:58:07Z",
+    "measured_at": "2026-11-12T13:01:48Z",
     "platform": "darwin-arm64",
     "python": "3.15.2"
   },
