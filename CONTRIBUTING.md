@@ -13,17 +13,21 @@ This repository contains research code accompanying the Active Inferants paper. 
 
    or, with uv: `uv sync --extra dev`.
 
-2. Run the test suite (pytest with a 90% coverage floor) and the linter:
+2. Run the gate before pushing. `fast` is the default arm; `all` includes the
+   full suite and the pinned GNN conformance check:
 
    ```sh
-   .venv/bin/python -m pytest
-   .venv/bin/ruff check .
+   .venv/bin/python scripts/gate.py fast
+   .venv/bin/python scripts/gate.py all
    ```
+
+   `all` runs `lint`, `docs`, `test`, and `gnn`. The arm table, measured
+   timings, and the CI job mapping are in [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
 3. For simulation changes, add or extend tests in `tests/` (the suite is fast and deterministic — no full 2,000-step experiments required for coverage).
 4. Do not commit generated `imgs/` output or coverage artifacts.
 
-Continuous integration (`.github/workflows/ci.yml`) runs ruff and the full pytest suite on every push to `main` and on pull requests, using the locked dependencies in `uv.lock`. When you change dependencies, regenerate the lockfile with `uv lock`.
+Continuous integration (`.github/workflows/ci.yml`) runs the same `scripts/gate.py` arms on every push to `main` and on pull requests, using the locked dependencies in `uv.lock`. When you change dependencies, regenerate the lockfile with `uv lock`.
 
 ## Scope
 
