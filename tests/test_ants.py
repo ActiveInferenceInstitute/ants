@@ -214,6 +214,7 @@ def test_main_save_false_writes_nothing(tmp_path, monkeypatch):
     assert not [f for f in os.listdir(".") if f.endswith(".npy")]
 
 
+@pytest.mark.slow
 def test_main_save_true_writes_outputs(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     np.random.seed(0)

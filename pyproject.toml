@@ -29,6 +29,9 @@ py-modules = ["ants", "config"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "slow: full-simulation test with figure output; excluded by the test-fast gate arm",
+]
 addopts = "--cov=ants --cov=config --cov-report=term-missing --cov-fail-under=90"
 
 [tool.ruff]

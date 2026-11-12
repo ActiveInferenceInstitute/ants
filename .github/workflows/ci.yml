@@ -13,7 +13,11 @@ permissions:
   contents: read
 
 jobs:
+  # One gate entry point, one command per arm: every step below runs
+  # `scripts/gate.py`, which is also what `uv run python scripts/gate.py fast|all`
+  # runs locally. See docs/RUN_GUIDE.md for the arm table and measured timings.
   test:
+    name: lint and tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -28,20 +32,16 @@ jobs:
       - name: Sync dependencies
         run: uv sync --extra dev
 
-      - name: Lint (ruff)
-        run: uv run ruff check .
-
-      - name: Test (pytest + coverage)
-        run: uv run pytest
+      - name: Gate (lint, docs, full tests)
+        run: uv run python scripts/gate.py lint docs test
 
   gnn-conformance:
+    name: gnn conformance (pinned)
     timeout-minutes: 60
     # Validates gnn/ant_colony_foraging.gnn.md with the upstream parser revision
-    # pinned in gnn/upstream.json. The pinned revision is fetched from the public
-    # repository at the recorded SHA into its own runtime; the strict gate never
-    # skips, and tests/test_gnn_conformance.py fails (never skips) when the
-    # explicitly selected GNN_ROOT checkout is missing or unusable.
-    name: gnn conformance (pinned)
+    # pinned in gnn/upstream.json. scripts/gate.py (the `gnn` arm) fetches the
+    # pinned commit and tag, provisions its interpreter, and then runs the strict
+    # validator plus tests/test_gnn_conformance.py; the gate never skips.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -50,44 +50,10 @@ jobs:
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.13.7"
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Sync dependencies
         run: uv sync --extra dev
 
-      - name: Provision the pinned GNN parser runtime
-        env:
-          GNN_ROOT: ${{ runner.temp }}/gnn
-        run: |
-          REVISION=$(python -c "import json; print(json.load(open('gnn/upstream.json'))['commit'])")
-          TAG=$(python -c "import json; print(json.load(open('gnn/upstream.json'))['tag'])")
-          git init --quiet "$GNN_ROOT"
-          git -C "$GNN_ROOT" remote add origin \
-            https://github.com/ActiveInferenceInstitute/Generalized_Notation_Notation.git
-          # A pin that no longer resolves upstream fails here rather than skipping.
-          git -C "$GNN_ROOT" fetch --depth 1 origin "$REVISION" "refs/tags/$TAG:refs/tags/$TAG"
-          git -C "$GNN_ROOT" checkout --quiet --detach "$REVISION"
-          uv venv --python 3.12 --no-project "$GNN_ROOT/.venv"
-          # The pinned extractor needs numpy and defusedxml; a missing dependency
-          # fails the run loudly instead of degrading to a skip.
-          uv pip install --python "$GNN_ROOT/.venv/bin/python" numpy defusedxml
-
-      - name: Validate the GNN specification against the pinned parser
-        env:
-          GNN_ROOT: ${{ runner.temp }}/gnn
-        run: uv run python scripts/validate_gnn_spec.py
-
-      - name: Run the pinned-upstream conformance tests
-        env:
-          GNN_ROOT: ${{ runner.temp }}/gnn
-        # The suite-wide coverage floor stays on the `test` job; this job runs a
-        # single conformance file, so it disables coverage instead of weakening
-        # the floor for the whole suite.
-        run: uv run pytest tests/test_gnn_conformance.py -q --no-cov
-
-      - name: Report the resolved GNN version
-        run: |
-          PIN=gnn/upstream.json
-          VERSION=$(python3 -c "import json;print(json.load(open('$PIN'))['tag'].removeprefix('v'))")
-          test -n "$VERSION"
-          echo "gnn-version=${VERSION}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Gate (GNN conformance)
+        run: uv run python scripts/gate.py gnn
