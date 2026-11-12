@@ -1,7 +1,7 @@
 # AII sidecar — InstituteOS metadata. Schema: aii_platform.aii_sidecar
 meta:
   sidecar_version: 1.2.1
-  updated: '2026-11-11'
+  updated: '2026-11-12'
 repo:
   name: ants
   slug: ants
@@ -89,7 +89,7 @@ tasks:
     cmd: git ls-files
     description: List tracked files.
   test:
-    cmd: uv run pytest tests/ -q
+    cmd: uv run python scripts/gate.py test
     description: Run the test suite.
 docs:
 - README.md
