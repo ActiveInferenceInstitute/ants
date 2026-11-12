@@ -17,18 +17,18 @@ Measured: 2026-11-12T12:45:00Z · host: darwin-arm64 · Python: 3.15.2
 | Arm | Command | Wall time (s) | Facts |
 | --- | --- | ---: | --- |
 | `lint` | `uv run ruff check .` | 0.07 | ruff=true |
-| `test` | `uv run pytest` | 31.17 | coverage_percent=100.00, note=31.17 s at 12:45Z; the identical command re-run at 12:56Z took 43.54 s, so this host varies by roughly 40% (stochastic simulation plus host load), tests_passed=38 |
+| `test` | `uv run pytest` | 31.17 | coverage_percent=100.00, note=single-run readings of this identical command on this host: 31.17 s at 12:45Z, 43.54 s at 12:56Z, 46.29 s; the spread is ~40%, so do not compare single runs across changes, tests_passed=38 |
 | `docs` | — | — | note=no documentation or link check existed |
 | `gnn` | `uv run python scripts/validate_gnn_spec.py`<br>`uv run pytest tests/test_gnn_conformance.py -q --no-cov` | 8.24 | tests_passed=8 |
 
 ## Latest — scripts/gate.py on this host
 
-Measured: 2026-11-12T12:58:07Z · host: darwin-arm64 · Python: 3.15.2
+Measured: 2026-11-12T13:01:48Z · host: darwin-arm64 · Python: 3.15.2
 
 | Arm | Command | Wall time (s) | Facts |
 | --- | --- | ---: | --- |
-| `lint` | `python -m ruff check .` | 0.11 | ruff=true |
-| `test-fast` | `python -m pytest -q --no-cov -m not slow` | 9.92 | tests_passed=37 |
-| `test` | `python -m pytest` | 43.31 | coverage_percent=100.00, tests_passed=38 |
-| `docs` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/check_docs.py` | 0.17 | — |
-| `gnn` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/validate_gnn_spec.py`<br>`python -m pytest tests/test_gnn_conformance.py -q --no-cov` | 8.94 | tests_passed=8 |
+| `lint` | `python -m ruff check .` | 0.07 | ruff=true |
+| `test-fast` | `python -m pytest -q --no-cov -m not slow` | 8.43 | tests_passed=37 |
+| `test` | `python -m pytest` | 32.82 | coverage_percent=100.00, tests_passed=38 |
+| `docs` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/check_docs.py` | 0.20 | — |
+| `gnn` | `python /Users/friedman/Documents/Git/gitvault/Username/ActiveInferenceInstitute/Public/ants/scripts/validate_gnn_spec.py`<br>`python -m pytest tests/test_gnn_conformance.py -q --no-cov` | 6.64 | tests_passed=8 |
