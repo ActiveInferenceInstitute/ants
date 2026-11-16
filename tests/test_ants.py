@@ -8,8 +8,8 @@ import imageio
 import numpy as np
 import pytest
 
-import config as cf
 import ants as implementation
+import config as cf
 from ants import MDP, Env, create_ant, dis, main, plot_path
 
 PREFERENCES = np.arange(cf.NUM_OBSERVATIONS, dtype=float).reshape(-1, 1)

@@ -18,11 +18,10 @@ import sys
 from pathlib import Path
 
 import numpy as np
-
 import pytest
 
-import config as cf
 import ants as implementation
+import config as cf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
