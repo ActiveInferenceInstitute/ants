@@ -25,12 +25,20 @@ deselects it. CI runs the same gate arms on every push and pull request (see
 | File | Covers |
 | --- | --- |
 | [`test_config.py`](test_config.py) | Grid dimensions, the nine-action map and opposite-action table, and the observation/state/action counts in [`../config.py`](../config.py). |
-| [`test_ants.py`](test_ants.py) | Environment initialization and observation reconstruction, `MDP` inference/action selection, `create_ant`, `plot_path`, and the `main()` run path including its `save=False` guards. |
-| [`test_figures.py`](test_figures.py) | Regression checks for [`../figure_1.py`](../figure_1.py), [`../figure_2.py`](../figure_2.py), and [`../figure_3.py`](../figure_3.py); imports them in a scratch directory so their `imgs/` side effect never touches the repository. |
+| [`test_ants.py`](test_ants.py) | Real environment/MDP behavior; origin-complete return paths (including empty, singleton, consecutive, and ragged trajectories); once-only run-local food switching; saved GIF decoding; and no-save output-history/RNG invariants. |
+| [`test_figures.py`](test_figures.py) | Real figure modules in scratch directories: batch/condition/repetition isolation, JSONL results, collision/partial-run preservation, and short-run GIF frames in both rendering modes. |
 | [`test_gnn_conformance.py`](test_gnn_conformance.py) | Specification sections and declared dimensions against [`../config.py`](../config.py), plus validation of [`../gnn/ant_colony_foraging.gnn.md`](../gnn/ant_colony_foraging.gnn.md) with the pinned upstream reader and parser when the GNN checkout is available. |
 
 The simulation is stochastic and does not set a random seed, so tests assert
 structure and invariants rather than run-to-run numeric equality.
+
+The 2026-11-13 governed focused run of `test_ants.py` and `test_figures.py`
+passed 48 tests with no skips. A separate exact-pin source-mode proof passed
+all 14 GNN conformance tests and the strict validator at v5.0.3
+(`8f293d9ba810e6eda5c09842d9c7ed9ffa5f92c1`), with independently bound
+bootstrap/manifest and verified imported parser bytes. Neither run measures
+full-suite coverage, runs the default scientific campaigns, or establishes
+installed-origin/release qualification. A5/A6 remain owner-facing open items.
 
 ## Conventions
 

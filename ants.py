@@ -48,6 +48,7 @@ class Env:
     """The shared grid environment: pheromone observations, walls, and food."""
 
     def __init__(self):
+        self.food_location = list(cf.FOOD_LOCATION)
         self.visit_matrix = np.zeros((cf.GRID[0], cf.GRID[1]))
         self.obs_matrix = np.zeros((cf.NUM_OBSERVATIONS, cf.GRID[0], cf.GRID[1]))
         self.obs_matrix[0, :, :] = 1.0
@@ -65,10 +66,10 @@ class Env:
 
     def check_food(self, x_pos, y_pos):
         return (
-            (x_pos > (cf.FOOD_LOCATION[0] - cf.FOOD_SIZE[0]))
-            and (x_pos < (cf.FOOD_LOCATION[0] + cf.FOOD_SIZE[0]))
-            and (y_pos > (cf.FOOD_LOCATION[1] - cf.FOOD_SIZE[1]))
-            and (y_pos < (cf.FOOD_LOCATION[1] + cf.FOOD_SIZE[1]))
+            (x_pos > (self.food_location[0] - cf.FOOD_SIZE[0]))
+            and (x_pos < (self.food_location[0] + cf.FOOD_SIZE[0]))
+            and (y_pos > (self.food_location[1] - cf.FOOD_SIZE[1]))
+            and (y_pos < (self.food_location[1] + cf.FOOD_SIZE[1]))
         )
 
     def check_walls(self, orig_x, orig_y, x_pos, y_pos):
@@ -112,10 +113,11 @@ class Env:
         self.obs_matrix[curr_obs, pos[0], pos[1]] = 1.0
 
         ant.backward_step += 1
-        if ant.backward_step >= path_len - 1:
+        if ant.backward_step >= path_len:
             ant.is_returning = False
             traj = ant.traj
-            ant.traj = []
+            ant.traj = [(ant.x_pos, ant.y_pos)]
+            ant.backward_step = 0
             return True, traj
         else:
             return False, None
@@ -304,11 +306,12 @@ def main(num_steps, init_ants, max_ants, C, save=True, switch=False, name="", an
         ant.mdp.reset(obs)
         ants.append(ant)
 
-    imgs = []
     completed_trips = 0
     distance = 0
-    ant_locations = []
-    round_trips_over_time = []
+    if save:
+        imgs = []
+        ant_locations = []
+        round_trips_over_time = []
     for t in range(num_steps):
         t_dis = 0
 
@@ -328,9 +331,8 @@ def main(num_steps, init_ants, max_ants, C, save=True, switch=False, name="", an
             ant.mdp.reset(obs)
             ants.append(ant)
 
-        if switch and t and t % max(1, num_steps // 2) == 0:
-            # switch
-            cf.FOOD_LOCATION[0] = cf.GRID[0] - cf.FOOD_LOCATION[0]
+        if switch and t > 0 and t == num_steps // 2:
+            env.food_location[0] = cf.GRID[0] - env.food_location[0]
 
         for ant in ants:
             if not ant.is_returning:
@@ -348,21 +350,16 @@ def main(num_steps, init_ants, max_ants, C, save=True, switch=False, name="", an
         env.decay()
 
         if save:
-            if t in np.arange(0, num_steps, max(1, num_steps // 20)):
+            if t % max(1, num_steps // 20) == 0:
                 env.plot(ants, savefig=True, name=f"imgs/{name}_{t}.png")
-            else:
-                img = env.plot(ants, ant_only_gif=ant_only_gif)
-                imgs.append(img)
-
-        round_trips_over_time.append(completed_trips / max_ants)
-        ant_locations.append([[ant.x_pos, ant.y_pos] for ant in ants])
+            imgs.append(env.plot(ants, ant_only_gif=ant_only_gif))
+            round_trips_over_time.append(completed_trips / max_ants)
+            ant_locations.append([[ant.x_pos, ant.y_pos] for ant in ants])
 
     if save:
         save_gif(imgs, f"imgs/{name}.gif")
-
-    ant_locations = np.array(ant_locations, dtype=object)
-    round_trips_over_time = np.array(round_trips_over_time)
-    if save:
+        ant_locations = np.array(ant_locations, dtype=object)
+        round_trips_over_time = np.array(round_trips_over_time)
         np.save(f"imgs/{name}_locations", ant_locations)
         np.save(f"imgs/{name}_round_trips", round_trips_over_time)
 
