@@ -59,6 +59,25 @@ Implemented in commits `247de94` (code fixes), `a4bc393` (documentation), `8f2b0
 - [x] Adopt the canonical importer pin schema `gnn-importer-pin/v1` in `gnn/upstream.json` and validate the pin's shape in the conformance checks (✓ #11, #16)
 - [x] GNN–FEP importer cutover — pin advanced to `v5.1.0` (`75c834bd8519dc7b5adc4d24f16bf393cfd1ecdf`, the newest upstream tag); the local pin reader is gone and the `gnn` arm runs `python -m gnn.importers check --repo .` from the pinned environment, then the strict validator and the conformance tests (✓ #15; arm re-run green 2026-11-12)
 
+## 2026-11-13 software qualification
+
+- [x] A1: complete return trajectories at their origin and seed the next excursion there.
+- [x] A2: switch run-local food exactly once without mutating configuration.
+- [x] A3: isolate batch/condition/repetition artifacts, append actual successful JSONL records, and preserve collisions/partial runs.
+- [x] A4: capture decodable short-run GIFs independently of PNG cadence in both modes.
+- [x] A7: omit output-only histories with `save=False` without changing results or RNG state.
+- [ ] A5: exact-pin source conformance passed (14 tests plus strict validator, v5.0.3); full dependency/integration acceptance remains open. Do not conflate source proof with installed-origin or release qualification.
+- [ ] A6: scientific-owner review of the proposed expectation/equation prose; no equation changes admitted.
+
+Evidence: fresh GitVault `test` execution on 2026-11-13, 48 focused behavioral
+tests passed, no skips, source unchanged, descendants reaped. This is not a
+coverage, release, or full scientific-campaign result. Earlier dated closures
+below and above remain historical evidence.
+
+Separate exact-pin source proof retains a complete bootstrap/manifest and
+parser-import receipt. It does not close A5's owner acceptance or authorize
+A6's expectation/equation edits.
+
 ## Open / deferred
 
 - `figure_2.py` and `figure_3.py` have still never been run end-to-end in a recorded pass: each is `NUM_AVERAGE = 5` repetitions of four colony sizes (10, 30, 50, 70) at 2,000 steps with `switch=True`, and `tests/test_figures.py` only asserts their module constants plus the strict-prior column shape. End-to-end evidence for the shared `main()` path is `figure_1.py`'s run together with the suite. Blocked on workstation CPU time, not on code — it cannot move into CI while hosted Actions is locked. Owner: a maintainer running it locally, then recording the run in a dated review log.

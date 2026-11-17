@@ -17,14 +17,17 @@ import re
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
+import ants as implementation
 import config as cf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from gnn_conformance import (
     SPEC_PATH,
+    ConformanceError,
     GnnUnavailable,
     check_conformance,
     extract_spec,
@@ -102,6 +105,28 @@ def test_extraction_uses_schema_major_one(extracted_model: dict) -> None:
     assert extracted_model["extraction_schema_version"].startswith("1.")
 
 
-def test_spec_conforms_to_implementation(extracted_model: dict) -> None:
-    checks = check_conformance(extracted_model)
-    assert len(checks) == 6
+@pytest.mark.parametrize("drift", ["B", "C", "p0"])
+def test_spec_conforms_to_implementation_and_rejects_factory_drift(
+    extracted_model: dict, monkeypatch, drift,
+) -> None:
+    # Establish the real extracted model is valid before changing only the
+    # factory product. No copied transition constructor or synthetic extractor.
+    check_conformance(extracted_model)
+    original_factory = implementation.create_ant
+
+    def changed_factory(*args, **kwargs):
+        ant = original_factory(*args, **kwargs)
+        if drift == "B":
+            ant.mdp.B = np.roll(ant.mdp.B, 1, axis=1)
+            np.testing.assert_allclose(ant.mdp.B.sum(axis=1), 1.0)
+        elif drift == "C":
+            ant.mdp.C = np.roll(ant.mdp.C, 1, axis=0)
+            assert ant.mdp.C.sum() == pytest.approx(1.0)
+        else:
+            ant.mdp.p0 = 0.1
+        return ant
+
+    # _import_implementation must pick up this actual factory seam.
+    monkeypatch.setattr(implementation, "create_ant", changed_factory)
+    with pytest.raises(ConformanceError, match="^B" if drift == "B" else "^C"):
+        check_conformance(extracted_model)

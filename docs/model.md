@@ -43,7 +43,7 @@ The three executable scripts define the experiments used by this repository:
 - `figure_2.py` repeats five runs for colonies of 10, 30, 50, and 70 ants using a gradual observation preference.
 - `figure_3.py` repeats five runs for colonies of 10, 30, 50, and 70 ants using a strict preference that assigns increasing value to pheromone levels 5–9. Its preference vector is transposed to the column shape expected by `MDP`.
 
-Each script uses `save=True` and writes generated artifacts below `imgs/`. The defaults are computational experiments, not a packaged command-line interface.
+Each script uses `save=True` and writes generated artifacts below `imgs/`. The repeated experiments give each batch/condition/repetition an exclusive directory and append successful run records to condition-specific JSONL summaries; partial runs are preserved, not overwritten. Food switching changes only that run's `Env.food_location`. The defaults are computational experiments, not a packaged command-line interface; the full repeated scientific campaigns are not implied by focused software tests.
 
 ## Main parameters
 

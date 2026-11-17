@@ -276,15 +276,15 @@ def _import_implementation():
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
     import config as cf
-    from ants import MDP, Env, create_ant
+    from ants import Env, create_ant
 
-    return cf, Env, MDP, create_ant
+    return cf, Env, create_ant
 
 
 def standard_preference() -> np.ndarray:
     """The standard prior used by figure_1.py and figure_2.py."""
 
-    cf, _, _, _ = _import_implementation()
+    cf, _, _ = _import_implementation()
     return np.arange(cf.NUM_OBSERVATIONS, dtype=float).reshape(-1, 1)
 
 
@@ -306,7 +306,7 @@ def check_conformance(model: dict) -> list[str]:
     the first mismatch.
     """
 
-    cf, Env, MDP, create_ant = _import_implementation()
+    cf, Env, create_ant = _import_implementation()
     passed: list[str] = []
 
     def require(condition: bool, message: str) -> None:
@@ -351,21 +351,22 @@ def check_conformance(model: dict) -> list[str]:
     # The implementation stores B as [action][next_state][previous_state]
     # (MDP.step computes B[a] @ sQ); GNN stores it as
     # [next_state][previous_state][action].
-    raw_transitions = np.zeros((cf.NUM_ACTIONS, cf.NUM_STATES, cf.NUM_STATES))
-    for action in range(cf.NUM_ACTIONS):
-        raw_transitions[action, action, :] = 1.0
-    mdp = MDP(initial_likelihood, raw_transitions, standard_preference())
-    canonical_transitions = np.transpose(mdp.B, (1, 2, 0))
+    canonical_transitions = np.transpose(ant.mdp.B, (1, 2, 0))
     require(
         np.allclose(np.asarray(model["B_matrix"], dtype=float), canonical_transitions, atol=1e-5),
         "B does not match the deterministic create_ant transition tensor",
     )
     passed.append("B matches the deterministic action-index transitions (create_ant)")
 
-    log_preferences = np.log(_normalize(standard_preference().ravel() + mdp.p0))
+    preferences = ant.mdp.C.ravel()
+    expected_preferences = _normalize(standard_preference().ravel() + ant.mdp.p0)
     require(
-        np.allclose(_softmax(model["C_vector"]), np.exp(log_preferences), atol=1e-6),
-        "softmax(C) does not recover normalize(C_raw + p0) for the standard prior",
+        np.allclose(preferences, expected_preferences, atol=1e-6),
+        "C returned by create_ant does not match normalize(C_raw + its p0)",
+    )
+    require(
+        np.allclose(_softmax(model["C_vector"]), preferences, atol=1e-6),
+        "C log-preferences do not decode to the actual create_ant preference distribution",
     )
     passed.append("C decodes to the standard-prior preference distribution")
 
